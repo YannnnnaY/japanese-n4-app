@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本語 N4 — Learn Japanese</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a2e;
+    --ink2: #2d2d4e;
+    --paper: #faf8f3;
+    --cream: #f0ece0;
+    --gold: #c9a84c;
+    --gold-light: #f5e8c0;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --green: #1a7a4a;
+    --green-light: #e8f7ef;
+    --blue: #1a4a8a;
+    --blue-light: #e8eef7;
+    --gray: #8a8a9a;
+    --border: rgba(26,26,46,0.12);
+    --shadow: 0 2px 16px rgba(26,26,46,0.10);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--ink);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .logo span { color: rgba(255,255,255,0.6); font-size: 13px; font-family: 'DM Sans', sans-serif; letter-spacing: 0; margin-left: 8px; }
+  .xp-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .xp-label { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .xp-bar { width: 100px; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
+  .xp-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.5s ease; }
+  .xp-count { font-size: 12px; color: var(--gold); font-weight: 600; }
+
+  /* Nav */
+  .nav {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-btn {
+    padding: 14px 20px;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--ink); }
+  .nav-btn.active { color: var(--ink); border-bottom-color: var(--gold); }
+
+  /* Main */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 24px;
+  }
+
+  /* Cards grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  /* Vocab card */
+  .vocab-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    text-align: center;
+  }
+  .vocab-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--gold); }
+  .vocab-card .kanji { font-family: 'Noto Serif JP', serif; font-size: 36px; color: var(--ink); margin-bottom: 4px; }
+  .vocab-card .reading { font-size: 13px; color: var(--gray); margin-bottom: 6px; }
+  .vocab-card .meaning { font-size: 14px; font-weight: 500; color: var(--ink2); }
+  .vocab-card .tag { position: absolute; top: 10px; right: 10px; font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--gold-light); color: #7a5c1a; font-weight: 600; }
+  .vocab-card.learned { border-color: var(--green); }
+  .vocab-card.learned::after { content: '✓'; position: absolute; top: 10px; left: 12px; font-size: 12px; color: var(--green); font-weight: 700; }
+
+  /* Grammar cards */
+  .grammar-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+  }
+  .grammar-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+  .grammar-card .pattern { font-family: 'Noto Serif JP', serif; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
+  .grammar-card .usage { font-size: 13px; color: var(--gray); margin-bottom: 10px; }
+  .grammar-card .example-jp { font-family: 'Noto Serif JP', serif; font-size: 15px; color: var(--ink2); margin-bottom: 4px; }
+  .grammar-card .example-en { font-size: 13px; color: var(--gray); }
+  .grammar-badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; background: var(--blue-light); color: var(--blue); font-weight: 600; margin-bottom: 10px; }
+
+  /* Quiz section */
+  .quiz-container {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .quiz-progress { display: flex; gap: 6px; margin-bottom: 24px; }
+  .quiz-pip { flex: 1; height: 4px; background: var(--cream); border-radius: 2px; transition: background 0.3s; }
+  .quiz-pip.done { background: var(--green); }
+  .quiz-pip.active { background: var(--gold); }
+  .quiz-question { font-family: 'Noto Serif JP', serif; font-size: 42px; text-align: center; margin: 24px 0 8px; color: var(--ink); }
+  .quiz-reading { text-align: center; font-size: 14px; color: var(--gray); margin-bottom: 24px; }
+  .quiz-type { text-align: center; font-size: 12px; color: var(--gray); background: var(--cream); display: inline-block; padding: 3px 12px; border-radius: 20px; margin-bottom: 24px; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .quiz-option {
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    color: var(--ink);
+  }
+  .quiz-option:hover { border-color: var(--gold); background: var(--gold-light); }
+  .quiz-option.correct { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 600; }
+  .quiz-option.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+  .quiz-option:disabled { cursor: not-allowed; }
+  .quiz-feedback { padding: 14px 18px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; display: none; line-height: 1.6; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--green-light); color: var(--green); border: 1px solid #aedfc7; }
+  .quiz-feedback.wrong { background: var(--red-light); color: var(--red); border: 1px solid #f5c2bc; }
+  .quiz-next { width: 100%; padding: 14px; background: var(--ink); color: white; border: none; border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; display: none; transition: background 0.2s; }
+  .quiz-next:hover { background: var(--ink2); }
+  .quiz-next.show { display: block; }
+  .quiz-score { text-align: center; padding: 32px; display: none; }
+  .quiz-score.show { display: block; }
+  .score-big { font-size: 64px; font-weight: 300; color: var(--gold); }
+  .score-sub { font-size: 16px; color: var(--gray); margin-bottom: 24px; }
+  .score-msg { font-size: 15px; color: var(--ink2); background: var(--cream); padding: 16px; border-radius: 10px; margin-bottom: 24px; line-height: 1.7; }
+  .restart-btn { padding: 12px 32px; background: var(--ink); color: white; border: none; border-radius: 10px; font-size: 15px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .restart-btn:hover { background: var(--ink2); }
+
+  /* AI tutor */
+  .tutor-wrap { max-width: 640px; margin: 0 auto; }
+  .tutor-chat { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; min-height: 320px; max-height: 420px; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+  .chat-msg.user { flex-direction: row-reverse; }
+  .chat-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-family: 'Noto Serif JP', serif; }
+  .chat-avatar.user { background: var(--gold); color: var(--ink); }
+  .chat-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; max-width: 80%; background: var(--cream); color: var(--ink); }
+  .chat-bubble.user { background: var(--ink); color: white; }
+  .chat-bubble .jp { font-family: 'Noto Serif JP', serif; }
+  .tutor-input-wrap { display: flex; gap: 10px; }
+  .tutor-input { flex: 1; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; transition: border 0.2s; }
+  .tutor-input:focus { border-color: var(--gold); }
+  .tutor-send { padding: 12px 20px; background: var(--ink); color: white; border: none; border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+  .tutor-send:hover { background: var(--ink2); }
+  .tutor-send:disabled { background: var(--gray); cursor: not-allowed; }
+  .quick-prompts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .quick-btn { padding: 6px 14px; background: var(--cream); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--ink2); transition: all 0.15s; }
+  .quick-btn:hover { border-color: var(--gold); background: var(--gold-light); }
+
+  /* Kanji section */
+  .kanji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+  .kanji-tile {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .kanji-tile:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+  .kanji-tile .k { font-family: 'Noto Serif JP', serif; font-size: 32px; color: var(--ink); }
+  .kanji-tile .kr { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .kanji-tile .km { font-size: 11px; color: var(--ink2); font-weight: 500; margin-top: 2px; }
+  .kanji-tile.mastered { border-color: var(--gold); }
+  .kanji-tile.mastered .k { color: var(--gold); }
+
+  /* Stats bar */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 300; color: var(--gold); }
+  .stat-label { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  /* Typing challenge */
+  .typing-challenge { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .typing-q { font-family: 'Noto Serif JP', serif; font-size: 32px; text-align: center; margin-bottom: 8px; }
+  .typing-hint { text-align: center; font-size: 13px; color: var(--gray); margin-bottom: 20px; }
+  .typing-input { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 18px; text-align: center; font-family: 'DM Sans', sans-serif; outline: none; transition: border 0.2s; }
+  .typing-input:focus { border-color: var(--gold); }
+  .typing-input.correct-input { border-color: var(--green); background: var(--green-light); }
+  .typing-input.wrong-input { border-color: var(--red); background: var(--red-light); }
+
+  /* Loading dots */
+  .dots { display: inline-flex; gap: 4px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gray); animation: bounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.7)} 40%{transform:scale(1)} }
+
+  /* Page transitions */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  /* Responsive */
+  @media(max-width:600px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .card-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media(max-width:400px) {
+    .card-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .badge { padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-n4 { background: var(--blue-light); color: var(--blue); }
+  .badge-vocab { background: var(--gold-light); color: #7a5c1a; }
+  .badge-gram { background: var(--green-light); color: var(--green); }
+
+  /* Kana grid */
+  .kana-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .kana-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    perspective: 600px;
+    min-height: 90px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .kana-card:hover { border-color: var(--gold); box-shadow: var(--shadow); }
+  .kana-card.mastered { border-color: var(--gold); background: var(--gold-light); }
+  .kana-card .kc { font-family: 'Noto Serif JP', serif; font-size: 30px; color: var(--ink); line-height: 1; }
+  .kana-card .kr { font-size: 12px; color: var(--gray); margin-top: 6px; }
+  .kana-card.mastered .kc { color: #7a5c1a; }
+  .kana-card.flipped .kr { display: none; }
+  .kana-card.flipped .kc { font-size: 14px; color: var(--gray); }
+  .kana-card.flipped .kana-hidden { display: block !important; font-family: 'Noto Serif JP', serif; font-size: 28px; color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">日本語<span>JLPT N4</span></div>
+    <div class="xp-bar-wrap">
+      <span class="xp-label">Level</span>
+      <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      <span class="xp-count" id="xpCount">0 XP</span>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showPage('vocab',this)">📚 Vocabulary</button>
+    <button class="nav-btn" onclick="showPage('grammar',this)">🔤 Grammar</button>
+    <button class="nav-btn" onclick="showPage('kanji',this)">漢 Kanji</button>
+    <button class="nav-btn" onclick="showPage('hiragana',this)">あ Hiragana</button>
+    <button class="nav-btn" onclick="showPage('katakana',this)">ア Katakana</button>
+    <button class="nav-btn" onclick="showPage('quiz',this)">🎯 Quiz</button>
+    <button class="nav-btn" onclick="showPage('tutor',this)">🤖 AI Tutor</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- VOCAB PAGE -->
+  <div id="vocabPage" class="page active">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="learnedCount">0</div><div class="stat-label">Words learned</div></div>
+      <div class="stat-card"><div class="stat-num">308</div><div class="stat-label">N4 vocabulary</div></div>
+      <div class="stat-card"><div class="stat-num" id="streakDays">1</div><div class="stat-label">Day streak</div></div>
+      <div class="stat-card"><div class="stat-num" id="accPct">—</div><div class="stat-label">Quiz accuracy</div></div>
+    </div>
+
+    <div class="section-title">Essential N4 Vocabulary</div>
+    <p class="section-sub">Click any word to mark it as learned. Focus on the most frequent N4 words.</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="quick-btn" onclick="filterVocab('all')">All</button>
+      <button class="quick-btn" onclick="filterVocab('verb')">Verbs</button>
+      <button class="quick-btn" onclick="filterVocab('noun')">Nouns</button>
+      <button class="quick-btn" onclick="filterVocab('adj')">Adjectives</button>
+      <button class="quick-btn" onclick="filterVocab('adv')">Adverbs</button>
+    </div>
+
+    <div class="card-grid" id="vocabGrid"></div>
+  </div>
+
+  <!-- GRAMMAR PAGE -->
+  <div id="grammarPage" class="page">
+    <div class="section-title">N4 Grammar Patterns</div>
+    <p class="section-sub">Master these 30 essential grammar forms tested on JLPT N4.</p>
+    <div id="grammarList"></div>
+  </div>
+
+  <!-- KANJI PAGE -->
+  <div id="kanjiPage" class="page">
+    <div class="section-title">N4 Kanji (300 characters)</div>
+    <p class="section-sub">Click a kanji to mark it as mastered. Gold = mastered.</p>
+    <div class="kanji-grid" id="kanjiGrid"></div>
+  </div>
+
+  <!-- QUIZ PAGE -->
+  <div id="quizPage" class="page">
+    <div class="section-title">Practice Quiz</div>
+    <p class="section-sub">Test your N4 vocabulary and reading comprehension.</p>
+
+    <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
+      <button class="quick-btn" onclick="startQuiz('vocab')">📚 Vocabulary Quiz</button>
+      <button class="quick-btn" onclick="startQuiz('reading')">👁 Reading Quiz</button>
+      <button class="quick-btn" onclick="startQuiz('grammar')">🔤 Grammar Quiz</button>
+      <button class="quick-btn" onclick="startQuiz('listening')">🔊 Mixed Practice</button>
+    </div>
+
+    <div class="quiz-container" id="quizContainer">
+      <div id="quizIntro" style="text-align:center;padding:24px 0;">
+        <div style="font-size:48px;margin-bottom:16px;">🎯</div>
+        <div style="font-size:18px;font-weight:500;margin-bottom:8px;">Ready to practice?</div>
+        <div style="font-size:14px;color:var(--gray);">Choose a quiz type above to get started</div>
+      </div>
+      <div id="quizContent" style="display:none;">
+        <div class="quiz-progress" id="quizProgress"></div>
+        <div style="text-align:center;">
+          <span class="quiz-type" id="quizTypeLabel">Vocabulary</span>
+        </div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-reading" id="quizReading"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="quiz-next" id="quizNext" onclick="nextQuestion()">Next →</button>
+      </div>
+      <div class="quiz-score" id="quizScore">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-sub" id="scoreSub"></div>
+        <div class="score-msg" id="scoreMsg">Loading feedback...</div>
+        <button class="restart-btn" onclick="restartQuiz()">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIRAGANA PAGE -->
+  <div id="hiraganaPage" class="page">
+    <div class="section-title">Hiragana — ひらがな</div>
+    <p class="section-sub">The 46 basic hiragana characters. Click a card to flip and test yourself. Mark mastered ones gold.</p>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="quick-btn" onclick="filterKana('hiragana','all')">All</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','vowel')">Vowels</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','k')">K-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','s')">S-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','t')">T-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','n')">N-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','h')">H-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','m')">M-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','y')">Y-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','r')">R-row</button>
+      <button class="quick-btn" onclick="filterKana('hiragana','w')">W-row</button>
+    </div>
+    <div class="kana-grid" id="hiraganaGrid"></div>
+
+    <div style="margin-top:36px;">
+      <div class="section-title" style="font-size:16px;">Common N4 Hiragana Words</div>
+      <p class="section-sub">Vocabulary written primarily in hiragana that appear on the N4 exam.</p>
+      <div class="card-grid" id="hiraganaVocabGrid"></div>
+    </div>
+  </div>
+
+  <!-- KATAKANA PAGE -->
+  <div id="katakanaPage" class="page">
+    <div class="section-title">Katakana — カタカナ</div>
+    <p class="section-sub">The 46 basic katakana characters used for foreign words & emphasis. Click to flip.</p>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="quick-btn" onclick="filterKana('katakana','all')">All</button>
+      <button class="quick-btn" onclick="filterKana('katakana','vowel')">Vowels</button>
+      <button class="quick-btn" onclick="filterKana('katakana','k')">K-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','s')">S-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','t')">T-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','n')">N-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','h')">H-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','m')">M-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','y')">Y-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','r')">R-row</button>
+      <button class="quick-btn" onclick="filterKana('katakana','w')">W-row</button>
+    </div>
+    <div class="kana-grid" id="katakanaGrid"></div>
+
+    <div style="margin-top:36px;">
+      <div class="section-title" style="font-size:16px;">Common N4 Katakana Words</div>
+      <p class="section-sub">Loanwords and foreign vocabulary commonly tested at N4 level.</p>
+      <div class="card-grid" id="katakanaVocabGrid"></div>
+    </div>
+  </div>
+
+  <!-- AI TUTOR PAGE -->
+  <div id="tutorPage" class="page">
+    <div class="section-title">AI Japanese Tutor</div>
+    <p class="section-sub">Ask anything about N4 Japanese — grammar explanations, example sentences, practice conversations.</p>
+
+    <div class="tutor-wrap">
+      <div class="quick-prompts">
+        <button class="quick-btn" onclick="sendQuickPrompt('Explain the difference between は and が')">は vs が</button>
+        <button class="quick-btn" onclick="sendQuickPrompt('Give me 5 example sentences using て-form verbs')">て-form examples</button>
+        <button class="quick-btn" onclick="sendQuickPrompt('What are the most common N4 grammar mistakes?')">Common mistakes</button>
+        <button class="quick-btn" onclick="sendQuickPrompt('Teach me about Japanese honorifics (敬語) for N4')">Honorifics</button>
+        <button class="quick-btn" onclick="sendQuickPrompt('Practice conversation: ordering food in Japanese')">Practice ordering food</button>
+        <button class="quick-btn" onclick="sendQuickPrompt('Explain the passive form in Japanese')">Passive form</button>
+      </div>
+
+      <div class="tutor-chat" id="tutorChat">
+        <div class="chat-msg">
+          <div class="chat-avatar">先</div>
+          <div class="chat-bubble">こんにちは！I'm your N4 Japanese tutor. Ask me anything about vocabulary, grammar, kanji, or practice conversations. I'll explain everything clearly with examples. 頑張りましょう！(Let's do our best!)</div>
+        </div>
+      </div>
+      <div class="tutor-input-wrap">
+        <input class="tutor-input" id="tutorInput" placeholder="Ask about grammar, vocabulary, or request practice..." onkeydown="if(event.key==='Enter')sendMessage()">
+        <button class="tutor-send" id="tutorSendBtn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============ DATA ============
+const vocabData = [
+  {kanji:'会議',reading:'かいぎ',meaning:'meeting',type:'noun'},
+  {kanji:'送る',reading:'おくる',meaning:'to send',type:'verb'},
+  {kanji:'受ける',reading:'うける',meaning:'to receive',type:'verb'},
+  {kanji:'決める',reading:'きめる',meaning:'to decide',type:'verb'},
+  {kanji:'集まる',reading:'あつまる',meaning:'to gather',type:'verb'},
+  {kanji:'様々',reading:'さまざま',meaning:'various',type:'adj'},
+  {kanji:'特別',reading:'とくべつ',meaning:'special',type:'adj'},
+  {kanji:'丁寧',reading:'ていねい',meaning:'polite',type:'adj'},
+  {kanji:'経験',reading:'けいけん',meaning:'experience',type:'noun'},
+  {kanji:'関係',reading:'かんけい',meaning:'relationship',type:'noun'},
+  {kanji:'場合',reading:'ばあい',meaning:'case / situation',type:'noun'},
+  {kanji:'以上',reading:'いじょう',meaning:'more than / above',type:'noun'},
+  {kanji:'以下',reading:'いか',meaning:'less than / below',type:'noun'},
+  {kanji:'以前',reading:'いぜん',meaning:'before / formerly',type:'noun'},
+  {kanji:'急ぐ',reading:'いそぐ',meaning:'to hurry',type:'verb'},
+  {kanji:'泳ぐ',reading:'およぐ',meaning:'to swim',type:'verb'},
+  {kanji:'落ちる',reading:'おちる',meaning:'to fall',type:'verb'},
+  {kanji:'思い出す',reading:'おもいだす',meaning:'to recall',type:'verb'},
+  {kanji:'終わる',reading:'おわる',meaning:'to end',type:'verb'},
+  {kanji:'変わる',reading:'かわる',meaning:'to change',type:'verb'},
+  {kanji:'気をつける',reading:'きをつける',meaning:'to be careful',type:'verb'},
+  {kanji:'込む',reading:'こむ',meaning:'to be crowded',type:'verb'},
+  {kanji:'壊れる',reading:'こわれる',meaning:'to break',type:'verb'},
+  {kanji:'触る',reading:'さわる',meaning:'to touch',type:'verb'},
+  {kanji:'調べる',reading:'しらべる',meaning:'to investigate',type:'verb'},
+  {kanji:'捨てる',reading:'すてる',meaning:'to throw away',type:'verb'},
+  {kanji:'尋ねる',reading:'たずねる',meaning:'to ask / visit',type:'verb'},
+  {kanji:'続ける',reading:'つづける',meaning:'to continue',type:'verb'},
+  {kanji:'届く',reading:'とどく',meaning:'to arrive / reach',type:'verb'},
+  {kanji:'直す',reading:'なおす',meaning:'to fix / correct',type:'verb'},
+  {kanji:'残る',reading:'のこる',meaning:'to remain',type:'verb'},
+  {kanji:'運ぶ',reading:'はこぶ',meaning:'to carry',type:'verb'},
+  {kanji:'払う',reading:'はらう',meaning:'to pay',type:'verb'},
+  {kanji:'増える',reading:'ふえる',meaning:'to increase',type:'verb'},
+  {kanji:'迷う',reading:'まよう',meaning:'to be lost / hesitate',type:'verb'},
+  {kanji:'申し込む',reading:'もうしこむ',meaning:'to apply',type:'verb'},
+  {kanji:'戻る',reading:'もどる',meaning:'to return',type:'verb'},
+  {kanji:'安全',reading:'あんぜん',meaning:'safe / safety',type:'noun'},
+  {kanji:'以外',reading:'いがい',meaning:'except / other than',type:'noun'},
+  {kanji:'意見',reading:'いけん',meaning:'opinion',type:'noun'},
+  {kanji:'内容',reading:'ないよう',meaning:'contents',type:'noun'},
+  {kanji:'入学',reading:'にゅうがく',meaning:'school entry',type:'noun'},
+  {kanji:'卒業',reading:'そつぎょう',meaning:'graduation',type:'noun'},
+  {kanji:'生活',reading:'せいかつ',meaning:'daily life',type:'noun'},
+  {kanji:'社会',reading:'しゃかい',meaning:'society',type:'noun'},
+  {kanji:'時代',reading:'じだい',meaning:'era / period',type:'noun'},
+  {kanji:'自由',reading:'じゆう',meaning:'freedom',type:'adj'},
+  {kanji:'親切',reading:'しんせつ',meaning:'kind / kindness',type:'adj'},
+  {kanji:'正直',reading:'しょうじき',meaning:'honest',type:'adj'},
+  {kanji:'不便',reading:'ふべん',meaning:'inconvenient',type:'adj'},
+  {kanji:'必要',reading:'ひつよう',meaning:'necessary',type:'adj'},
+  {kanji:'複雑',reading:'ふくざつ',meaning:'complex',type:'adj'},
+  {kanji:'珍しい',reading:'めずらしい',meaning:'rare / unusual',type:'adj'},
+  {kanji:'怖い',reading:'こわい',meaning:'scary',type:'adj'},
+  {kanji:'嬉しい',reading:'うれしい',meaning:'happy / glad',type:'adj'},
+  {kanji:'悲しい',reading:'かなしい',meaning:'sad',type:'adj'},
+  {kanji:'恥ずかしい',reading:'はずかしい',meaning:'embarrassing',type:'adj'},
+  {kanji:'もっと',reading:'もっと',meaning:'more',type:'adv'},
+  {kanji:'ずっと',reading:'ずっと',meaning:'all along / much more',type:'adv'},
+  {kanji:'やっと',reading:'やっと',meaning:'finally / at last',type:'adv'},
+  {kanji:'きっと',reading:'きっと',meaning:'surely / certainly',type:'adv'},
+  {kanji:'なかなか',reading:'なかなか',meaning:'quite / not easily',type:'adv'},
+  {kanji:'だんだん',reading:'だんだん',meaning:'gradually',type:'adv'},
+  {kanji:'そろそろ',reading:'そろそろ',meaning:'soon / about time',type:'adv'},
+  {kanji:'ちゃんと',reading:'ちゃんと',meaning:'properly / surely',type:'adv'},
+  // --- additional verbs ---
+  {kanji:'諦める',reading:'あきらめる',meaning:'to give up',type:'verb'},
+  {kanji:'集める',reading:'あつめる',meaning:'to collect',type:'verb'},
+  {kanji:'驚く',reading:'おどろく',meaning:'to be surprised',type:'verb'},
+  {kanji:'思う',reading:'おもう',meaning:'to think / feel',type:'verb'},
+  {kanji:'考える',reading:'かんがえる',meaning:'to think / consider',type:'verb'},
+  {kanji:'確認する',reading:'かくにんする',meaning:'to confirm',type:'verb'},
+  {kanji:'片付ける',reading:'かたづける',meaning:'to tidy up',type:'verb'},
+  {kanji:'気づく',reading:'きづく',meaning:'to notice / realize',type:'verb'},
+  {kanji:'比べる',reading:'くらべる',meaning:'to compare',type:'verb'},
+  {kanji:'答える',reading:'こたえる',meaning:'to answer',type:'verb'},
+  {kanji:'断る',reading:'ことわる',meaning:'to refuse / decline',type:'verb'},
+  {kanji:'探す',reading:'さがす',meaning:'to search for',type:'verb'},
+  {kanji:'誘う',reading:'さそう',meaning:'to invite',type:'verb'},
+  {kanji:'信じる',reading:'しんじる',meaning:'to believe',type:'verb'},
+  {kanji:'助ける',reading:'たすける',meaning:'to help / rescue',type:'verb'},
+  {kanji:'頼む',reading:'たのむ',meaning:'to ask a favor / request',type:'verb'},
+  {kanji:'違う',reading:'ちがう',meaning:'to differ / be wrong',type:'verb'},
+  {kanji:'疲れる',reading:'つかれる',meaning:'to get tired',type:'verb'},
+  {kanji:'伝える',reading:'つたえる',meaning:'to convey / tell',type:'verb'},
+  {kanji:'連れる',reading:'つれる',meaning:'to bring / take along',type:'verb'},
+  {kanji:'慣れる',reading:'なれる',meaning:'to get used to',type:'verb'},
+  {kanji:'逃げる',reading:'にげる',meaning:'to escape / run away',type:'verb'},
+  {kanji:'脱ぐ',reading:'ぬぐ',meaning:'to take off (clothes)',type:'verb'},
+  {kanji:'始める',reading:'はじめる',meaning:'to begin / start',type:'verb'},
+  {kanji:'引っ越す',reading:'ひっこす',meaning:'to move (house)',type:'verb'},
+  {kanji:'増やす',reading:'ふやす',meaning:'to increase (tr.)',type:'verb'},
+  {kanji:'別れる',reading:'わかれる',meaning:'to separate / break up',type:'verb'},
+  {kanji:'笑う',reading:'わらう',meaning:'to laugh / smile',type:'verb'},
+  {kanji:'泣く',reading:'なく',meaning:'to cry',type:'verb'},
+  {kanji:'怒る',reading:'おこる',meaning:'to get angry',type:'verb'},
+  // --- additional nouns ---
+  {kanji:'アルバイト',reading:'アルバイト',meaning:'part-time job',type:'noun'},
+  {kanji:'お礼',reading:'おれい',meaning:'gratitude / thanks',type:'noun'},
+  {kanji:'お見舞い',reading:'おみまい',meaning:'visiting the sick',type:'noun'},
+  {kanji:'会話',reading:'かいわ',meaning:'conversation',type:'noun'},
+  {kanji:'科目',reading:'かもく',meaning:'subject / course',type:'noun'},
+  {kanji:'気持ち',reading:'きもち',meaning:'feeling / mood',type:'noun'},
+  {kanji:'計画',reading:'けいかく',meaning:'plan / project',type:'noun'},
+  {kanji:'原因',reading:'げんいん',meaning:'cause / reason',type:'noun'},
+  {kanji:'交通',reading:'こうつう',meaning:'traffic / transportation',type:'noun'},
+  {kanji:'国際',reading:'こくさい',meaning:'international',type:'noun'},
+  {kanji:'趣味',reading:'しゅみ',meaning:'hobby',type:'noun'},
+  {kanji:'準備',reading:'じゅんび',meaning:'preparation',type:'noun'},
+  {kanji:'紹介',reading:'しょうかい',meaning:'introduction',type:'noun'},
+  {kanji:'食事',reading:'しょくじ',meaning:'meal',type:'noun'},
+  {kanji:'申請',reading:'しんせい',meaning:'application / request',type:'noun'},
+  {kanji:'世界',reading:'せかい',meaning:'world',type:'noun'},
+  {kanji:'説明',reading:'せつめい',meaning:'explanation',type:'noun'},
+  {kanji:'相談',reading:'そうだん',meaning:'consultation / advice',type:'noun'},
+  {kanji:'体験',reading:'たいけん',meaning:'personal experience',type:'noun'},
+  {kanji:'地域',reading:'ちいき',meaning:'area / region',type:'noun'},
+  {kanji:'注意',reading:'ちゅうい',meaning:'caution / attention',type:'noun'},
+  {kanji:'通勤',reading:'つうきん',meaning:'commuting to work',type:'noun'},
+  {kanji:'電車',reading:'でんしゃ',meaning:'train',type:'noun'},
+  {kanji:'道路',reading:'どうろ',meaning:'road',type:'noun'},
+  {kanji:'日程',reading:'にってい',meaning:'schedule / itinerary',type:'noun'},
+  {kanji:'場所',reading:'ばしょ',meaning:'place / location',type:'noun'},
+  {kanji:'文化',reading:'ぶんか',meaning:'culture',type:'noun'},
+  {kanji:'方法',reading:'ほうほう',meaning:'method / way',type:'noun'},
+  {kanji:'目的',reading:'もくてき',meaning:'purpose / goal',type:'noun'},
+  {kanji:'予定',reading:'よてい',meaning:'schedule / plan',type:'noun'},
+  {kanji:'理由',reading:'りゆう',meaning:'reason',type:'noun'},
+  {kanji:'連絡',reading:'れんらく',meaning:'contact / communication',type:'noun'},
+  // --- additional adjectives ---
+  {kanji:'暖かい',reading:'あたたかい',meaning:'warm',type:'adj'},
+  {kanji:'厳しい',reading:'きびしい',meaning:'strict / harsh',type:'adj'},
+  {kanji:'細かい',reading:'こまかい',meaning:'detailed / fine',type:'adj'},
+  {kanji:'正確',reading:'せいかく',meaning:'accurate / precise',type:'adj'},
+  {kanji:'大切',reading:'たいせつ',meaning:'important / precious',type:'adj'},
+  {kanji:'大変',reading:'たいへん',meaning:'tough / very',type:'adj'},
+  {kanji:'丁寧',reading:'ていねい',meaning:'careful / polite',type:'adj'},
+  {kanji:'得意',reading:'とくい',meaning:'good at / proud',type:'adj'},
+  {kanji:'苦手',reading:'にがて',meaning:'not good at',type:'adj'},
+  {kanji:'便利',reading:'べんり',meaning:'convenient',type:'adj'},
+  {kanji:'真面目',reading:'まじめ',meaning:'serious / diligent',type:'adj'},
+  {kanji:'無理',reading:'むり',meaning:'impossible / unreasonable',type:'adj'},
+  {kanji:'優しい',reading:'やさしい',meaning:'gentle / kind',type:'adj'},
+  {kanji:'賑やか',reading:'にぎやか',meaning:'lively / bustling',type:'adj'},
+  // --- additional adverbs ---
+  {kanji:'いつも',reading:'いつも',meaning:'always / usually',type:'adv'},
+  {kanji:'たいてい',reading:'たいてい',meaning:'usually / generally',type:'adv'},
+  {kanji:'たまに',reading:'たまに',meaning:'occasionally / once in a while',type:'adv'},
+  {kanji:'特に',reading:'とくに',meaning:'especially / particularly',type:'adv'},
+  {kanji:'急に',reading:'きゅうに',meaning:'suddenly',type:'adv'},
+  {kanji:'全然',reading:'ぜんぜん',meaning:'not at all (with negative)',type:'adv'},
+  {kanji:'もちろん',reading:'もちろん',meaning:'of course',type:'adv'},
+  {kanji:'やはり',reading:'やはり',meaning:'as expected / after all',type:'adv'},
+  {kanji:'少し',reading:'すこし',meaning:'a little / slightly',type:'adv'},
+  {kanji:'十分',reading:'じゅうぶん',meaning:'enough / sufficiently',type:'adv'},
+];
+
+const grammarData = [
+  {pattern:'〜てしまう',usage:'Indicates completion, often with regret',example_jp:'財布を忘れてしまった。',example_en:'I forgot my wallet (and I regret it).',level:'N4'},
+  {pattern:'〜ておく',usage:'Do something in advance / leave as is',example_jp:'明日のために準備しておいた。',example_en:'I prepared in advance for tomorrow.',level:'N4'},
+  {pattern:'〜てみる',usage:'Try doing something',example_jp:'新しいレストランに行ってみた。',example_en:'I tried going to the new restaurant.',level:'N4'},
+  {pattern:'〜てくる',usage:'Change of state leading to now / come doing',example_jp:'だんだん寒くなってきた。',example_en:'It has gradually become cold.',level:'N4'},
+  {pattern:'〜ていく',usage:'Continue into the future / go doing',example_jp:'日本語を勉強していく。',example_en:'I will continue to study Japanese.',level:'N4'},
+  {pattern:'〜たら',usage:'If/when (conditional)',example_jp:'雨が降ったら、家にいます。',example_en:'If it rains, I will stay home.',level:'N4'},
+  {pattern:'〜ば',usage:'Conditional "if"',example_jp:'もっと練習すれば、上手になる。',example_en:'If you practice more, you will improve.',level:'N4'},
+  {pattern:'〜のに',usage:'Even though / despite (contrast)',example_jp:'勉強したのに、試験に落ちた。',example_en:'Even though I studied, I failed the test.',level:'N4'},
+  {pattern:'〜ために',usage:'For the purpose of / because of',example_jp:'健康のために運動する。',example_en:'I exercise for my health.',level:'N4'},
+  {pattern:'〜ながら',usage:'While doing (simultaneously)',example_jp:'音楽を聞きながら勉強する。',example_en:'I study while listening to music.',level:'N4'},
+  {pattern:'〜させる',usage:'Causative form: make/let someone do',example_jp:'子供に野菜を食べさせた。',example_en:'I made the child eat vegetables.',level:'N4'},
+  {pattern:'〜られる',usage:'Passive form: be done to',example_jp:'先生に褒められた。',example_en:'I was praised by the teacher.',level:'N4'},
+  {pattern:'〜てもいい',usage:'Permission: it is okay to do',example_jp:'ここで写真を撮ってもいいですか？',example_en:'Is it okay to take photos here?',level:'N4'},
+  {pattern:'〜てはいけない',usage:'Prohibition: must not do',example_jp:'ここでタバコを吸ってはいけない。',example_en:'You must not smoke here.',level:'N4'},
+  {pattern:'〜なければならない',usage:'Must / have to do',example_jp:'宿題をしなければならない。',example_en:'I have to do my homework.',level:'N4'},
+  {pattern:'〜そうだ',usage:'Looks like / hearsay (two usages)',example_jp:'雨が降りそうだ。',example_en:'It looks like it will rain.',level:'N4'},
+  {pattern:'〜ようだ',usage:'Seems like / appears to be',example_jp:'彼は疲れているようだ。',example_en:'He seems to be tired.',level:'N4'},
+  {pattern:'〜らしい',usage:'It seems / I heard (based on evidence)',example_jp:'彼女は病気らしい。',example_en:'She seems to be sick (I heard).',level:'N4'},
+  {pattern:'〜かもしれない',usage:'Might / perhaps',example_jp:'明日雨が降るかもしれない。',example_en:'It might rain tomorrow.',level:'N4'},
+  {pattern:'〜でしょう',usage:'Probably / right? (conjecture)',example_jp:'明日は晴れるでしょう。',example_en:'It will probably be sunny tomorrow.',level:'N4'},
+];
+
+const kanjiData = [
+  {k:'会',r:'かい・あ',m:'meet'},
+  {k:'社',r:'しゃ',m:'company'},
+  {k:'学',r:'がく・まな',m:'study'},
+  {k:'校',r:'こう',m:'school'},
+  {k:'先',r:'せん・さき',m:'previous'},
+  {k:'生',r:'せい・う',m:'life/birth'},
+  {k:'年',r:'ねん・とし',m:'year'},
+  {k:'月',r:'げつ・つき',m:'month/moon'},
+  {k:'日',r:'にち・ひ',m:'day/sun'},
+  {k:'時',r:'じ・とき',m:'time'},
+  {k:'間',r:'かん・ま',m:'interval'},
+  {k:'本',r:'ほん・もと',m:'book/origin'},
+  {k:'語',r:'ご・かた',m:'language'},
+  {k:'話',r:'わ・はな',m:'talk'},
+  {k:'読',r:'どく・よ',m:'read'},
+  {k:'書',r:'しょ・か',m:'write'},
+  {k:'聞',r:'ぶん・き',m:'listen/hear'},
+  {k:'見',r:'けん・み',m:'see'},
+  {k:'行',r:'こう・い',m:'go'},
+  {k:'来',r:'らい・く',m:'come'},
+  {k:'帰',r:'き・かえ',m:'return'},
+  {k:'食',r:'しょく・た',m:'eat'},
+  {k:'飲',r:'いん・の',m:'drink'},
+  {k:'買',r:'ばい・か',m:'buy'},
+  {k:'売',r:'ばい・う',m:'sell'},
+  {k:'使',r:'し・つか',m:'use'},
+  {k:'作',r:'さく・つく',m:'make'},
+  {k:'入',r:'にゅう・はい',m:'enter'},
+  {k:'出',r:'しゅつ・で',m:'exit'},
+  {k:'開',r:'かい・あ',m:'open'},
+  {k:'閉',r:'へい・し',m:'close'},
+  {k:'起',r:'き・お',m:'rise'},
+  {k:'寝',r:'しん・ね',m:'sleep'},
+  {k:'立',r:'りつ・た',m:'stand'},
+  {k:'座',r:'ざ・すわ',m:'sit'},
+  {k:'走',r:'そう・はし',m:'run'},
+  {k:'止',r:'し・と',m:'stop'},
+  {k:'待',r:'たい・ま',m:'wait'},
+  {k:'持',r:'じ・も',m:'hold'},
+  {k:'知',r:'ち・し',m:'know'},
+  {k:'思',r:'し・おも',m:'think'},
+  {k:'言',r:'げん・い',m:'say'},
+  {k:'聞',r:'ぶん・き',m:'hear'},
+  {k:'教',r:'きょう・おし',m:'teach'},
+  {k:'習',r:'しゅう・なら',m:'practice'},
+  {k:'忘',r:'ぼう・わす',m:'forget'},
+  {k:'覚',r:'かく・おぼ',m:'remember'},
+  {k:'始',r:'し・はじ',m:'begin'},
+  {k:'終',r:'しゅう・お',m:'end'},
+  {k:'続',r:'ぞく・つづ',m:'continue'},
+  {k:'変',r:'へん・か',m:'change'},
+  {k:'決',r:'けつ・き',m:'decide'},
+  {k:'選',r:'せん・えら',m:'choose'},
+  {k:'送',r:'そう・おく',m:'send'},
+  {k:'受',r:'じゅ・う',m:'receive'},
+  {k:'返',r:'へん・かえ',m:'return'},
+  {k:'借',r:'しゃく・か',m:'borrow'},
+  {k:'貸',r:'たい・か',m:'lend'},
+  {k:'払',r:'ふつ・はら',m:'pay'},
+  {k:'集',r:'しゅう・あつ',m:'collect'},
+  {k:'分',r:'ぶん・わ',m:'divide/minute'},
+  {k:'合',r:'ごう・あ',m:'combine'},
+  {k:'違',r:'い・ちが',m:'differ'},
+  {k:'同',r:'どう・おな',m:'same'},
+  {k:'別',r:'べつ・わか',m:'separate'},
+  {k:'特',r:'とく',m:'special'},
+  {k:'他',r:'た・ほか',m:'other'},
+  {k:'自',r:'じ・みずか',m:'self'},
+  {k:'由',r:'ゆ・よし',m:'reason'},
+  {k:'由',r:'ゆ',m:'freedom'},
+  {k:'安',r:'あん・やす',m:'cheap/safe'},
+  {k:'危',r:'き・あぶ',m:'dangerous'},
+  {k:'大',r:'だい・おお',m:'big'},
+  {k:'小',r:'しょう・ちい',m:'small'},
+  {k:'多',r:'た・おお',m:'many'},
+  {k:'少',r:'しょう・すこ',m:'few'},
+  {k:'早',r:'そう・はや',m:'early/fast'},
+  {k:'遅',r:'ち・おそ',m:'late/slow'},
+  {k:'近',r:'きん・ちか',m:'near'},
+  {k:'遠',r:'えん・とお',m:'far'},
+  {k:'強',r:'きょう・つよ',m:'strong'},
+  {k:'弱',r:'じゃく・よわ',m:'weak'},
+  {k:'新',r:'しん・あたら',m:'new'},
+  {k:'古',r:'こ・ふる',m:'old'},
+  {k:'良',r:'りょう・よ',m:'good'},
+  {k:'悪',r:'あく・わる',m:'bad'},
+  {k:'高',r:'こう・たか',m:'high/expensive'},
+  {k:'低',r:'てい・ひく',m:'low'},
+  {k:'長',r:'ちょう・なが',m:'long'},
+  {k:'短',r:'たん・みじか',m:'short'},
+  {k:'重',r:'じゅう・おも',m:'heavy'},
+  {k:'軽',r:'けい・かる',m:'light'},
+  {k:'広',r:'こう・ひろ',m:'wide'},
+  {k:'狭',r:'きょう・せま',m:'narrow'},
+];
+
+// ============ STATE ============
+let learned = new Set(JSON.parse(localStorage.getItem('jlpt_learned')||'[]'));
+let masteredKanji = new Set(JSON.parse(localStorage.getItem('jlpt_kanji')||'[]'));
+let xp = parseInt(localStorage.getItem('jlpt_xp')||'0');
+let quizCorrect = 0, quizTotal = 0;
+let currentFilter = 'all';
+let quizQuestions = [], quizIdx = 0, quizScore = 0, quizType = '';
+let answered = false;
+
+function saveState() {
+  localStorage.setItem('jlpt_learned', JSON.stringify([...learned]));
+  localStorage.setItem('jlpt_kanji', JSON.stringify([...masteredKanji]));
+  localStorage.setItem('jlpt_xp', xp);
+}
+
+function addXP(amount) {
+  xp += amount;
+  saveState();
+  updateXPBar();
+}
+
+function updateXPBar() {
+  const level = Math.floor(xp / 100);
+  const pct = (xp % 100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpCount').textContent = xp + ' XP';
+}
+
+// ============ NAV ============
+function showPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(page+'Page').classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ============ VOCAB ============
+function renderVocab() {
+  const grid = document.getElementById('vocabGrid');
+  const filtered = currentFilter === 'all' ? vocabData : vocabData.filter(v=>v.type===currentFilter);
+  grid.innerHTML = filtered.map((v,i)=>`
+    <div class="vocab-card ${learned.has(v.kanji)?'learned':''}" onclick="toggleLearned('${v.kanji}',this)">
+      <span class="tag">${v.type}</span>
+      <div class="kanji">${v.kanji}</div>
+      <div class="reading">${v.reading}</div>
+      <div class="meaning">${v.meaning}</div>
+    </div>
+  `).join('');
+  document.getElementById('learnedCount').textContent = learned.size;
+}
+
+function toggleLearned(kanji, card) {
+  if(learned.has(kanji)) {
+    learned.delete(kanji);
+    card.classList.remove('learned');
+  } else {
+    learned.add(kanji);
+    card.classList.add('learned');
+    addXP(5);
+  }
+  saveState();
+  document.getElementById('learnedCount').textContent = learned.size;
+}
+
+function filterVocab(type) {
+  currentFilter = type;
+  renderVocab();
+}
+
+// ============ GRAMMAR ============
+function renderGrammar() {
+  document.getElementById('grammarList').innerHTML = grammarData.map(g=>`
+    <div class="grammar-card">
+      <span class="grammar-badge">${g.level}</span>
+      <div class="pattern">${g.pattern}</div>
+      <div class="usage">${g.usage}</div>
+      <div class="example-jp">${g.example_jp}</div>
+      <div class="example-en">${g.example_en}</div>
+    </div>
+  `).join('');
+}
+
+// ============ KANJI ============
+function renderKanji() {
+  document.getElementById('kanjiGrid').innerHTML = kanjiData.map((k,i)=>`
+    <div class="kanji-tile ${masteredKanji.has(k.k+i)?'mastered':''}" onclick="toggleKanji('${k.k+i}',this)">
+      <div class="k">${k.k}</div>
+      <div class="kr">${k.r}</div>
+      <div class="km">${k.m}</div>
+    </div>
+  `).join('');
+}
+
+function toggleKanji(id, tile) {
+  if(masteredKanji.has(id)) {
+    masteredKanji.delete(id);
+    tile.classList.remove('mastered');
+  } else {
+    masteredKanji.add(id);
+    tile.classList.add('mastered');
+    addXP(8);
+  }
+  saveState();
+}
+
+// ============ QUIZ ============
+function makeVocabQuestions() {
+  const shuffled = [...vocabData].sort(()=>Math.random()-0.5).slice(0,8);
+  return shuffled.map(v=>{
+    const wrong = vocabData.filter(w=>w.meaning!==v.meaning).sort(()=>Math.random()-0.5).slice(0,3).map(w=>w.meaning);
+    const options = [...wrong, v.meaning].sort(()=>Math.random()-0.5);
+    return {question:v.kanji, reading:v.reading, answer:v.meaning, options, type:'Vocabulary'};
+  });
+}
+
+function makeReadingQuestions() {
+  const shuffled = [...vocabData].sort(()=>Math.random()-0.5).slice(0,8);
+  return shuffled.map(v=>{
+    const wrong = vocabData.filter(w=>w.reading!==v.reading).sort(()=>Math.random()-0.5).slice(0,3).map(w=>w.reading);
+    const options = [...wrong, v.reading].sort(()=>Math.random()-0.5);
+    return {question:v.kanji, reading:'', answer:v.reading, options, type:'Reading'};
+  });
+}
+
+function makeGrammarQuestions() {
+  const items = [...grammarData].sort(()=>Math.random()-0.5).slice(0,6);
+  return items.map(g=>{
+    const blank = g.pattern;
+    const wrong = grammarData.filter(x=>x.usage!==g.usage).sort(()=>Math.random()-0.5).slice(0,3).map(x=>x.pattern);
+    const options = [...wrong, blank].sort(()=>Math.random()-0.5);
+    return {question:g.usage, reading:g.example_jp, answer:blank, options, type:'Grammar'};
+  });
+}
+
+function makeMixedQuestions() {
+  return [...makeVocabQuestions().slice(0,3),...makeReadingQuestions().slice(0,2),...makeGrammarQuestions().slice(0,3)];
+}
+
+function startQuiz(type) {
+  quizType = type;
+  quizIdx = 0; quizScore = 0;
+  answered = false;
+  if(type==='vocab') quizQuestions = makeVocabQuestions();
+  else if(type==='reading') quizQuestions = makeReadingQuestions();
+  else if(type==='grammar') quizQuestions = makeGrammarQuestions();
+  else quizQuestions = makeMixedQuestions();
+
+  document.getElementById('quizIntro').style.display='none';
+  document.getElementById('quizScore').classList.remove('show');
+  document.getElementById('quizContent').style.display='block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if(quizIdx >= quizQuestions.length) { showScore(); return; }
+  answered = false;
+  const q = quizQuestions[quizIdx];
+  const pips = quizQuestions.map((_,i)=>`<div class="quiz-pip ${i<quizIdx?'done':i===quizIdx?'active':''}"></div>`).join('');
+  document.getElementById('quizProgress').innerHTML = pips;
+  document.getElementById('quizQuestion').textContent = q.question;
+  document.getElementById('quizReading').textContent = q.reading || '';
+  document.getElementById('quizTypeLabel').textContent = q.type;
+  document.getElementById('quizFeedback').classList.remove('show','correct','wrong');
+  document.getElementById('quizNext').classList.remove('show');
+  document.getElementById('quizOptions').innerHTML = q.options.map(o=>`
+    <button class="quiz-option" onclick="checkAnswer('${o.replace(/'/g,"\\'")}','${q.answer.replace(/'/g,"\\'")}',this)">${o}</button>
+  `).join('');
+}
+
+function checkAnswer(selected, correct, btn) {
+  if(answered) return;
+  answered = true;
+  document.querySelectorAll('.quiz-option').forEach(b=>b.disabled=true);
+  const fb = document.getElementById('quizFeedback');
+  if(selected===correct) {
+    btn.classList.add('correct');
+    fb.className='quiz-feedback show correct';
+    fb.textContent = '✓ Correct! Well done!';
+    quizScore++;
+    addXP(10);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-option').forEach(b=>{ if(b.textContent===correct) b.classList.add('correct'); });
+    fb.className='quiz-feedback show wrong';
+    fb.textContent = `✗ The correct answer is: ${correct}`;
+  }
+  quizTotal++;
+  const acc = Math.round((quizCorrect/quizTotal)*100)||0;
+  document.getElementById('accPct').textContent = isNaN(acc)?'—':acc+'%';
+  document.getElementById('quizNext').classList.add('show');
+}
+
+function nextQuestion() {
+  quizIdx++;
+  renderQuestion();
+}
+
+async function showScore() {
+  document.getElementById('quizContent').style.display='none';
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.classList.add('show');
+  const pct = Math.round((quizScore/quizQuestions.length)*100);
+  document.getElementById('scoreBig').textContent = quizScore+'/'+quizQuestions.length;
+  document.getElementById('scoreSub').textContent = pct+'% correct';
+  document.getElementById('scoreMsg').innerHTML = '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+
+  // Get AI feedback
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        messages:[{role:'user',content:`A student scored ${quizScore}/${quizQuestions.length} on a JLPT N4 ${quizType} quiz. Give a short encouraging 2-3 sentence message with one specific study tip. Be warm and motivating. Keep it under 80 words.`}]
+      })
+    });
+    const data = await res.json();
+    const msg = data.content?.find(c=>c.type==='text')?.text || 'Great effort! Keep practicing daily to build your N4 skills.';
+    document.getElementById('scoreMsg').textContent = msg;
+  } catch(e) {
+    const msgs = [
+      'Great effort! Consistent daily practice is the key to JLPT success. Try reviewing the words you missed.',
+      'Keep going! N4 takes time. Focus on grammar patterns and vocabulary exposure every day.',
+      'You\'re making progress! Try making flashcards for the words you found difficult.'
+    ];
+    document.getElementById('scoreMsg').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  }
+}
+
+function restartQuiz() {
+  document.getElementById('quizScore').classList.remove('show');
+  document.getElementById('quizIntro').style.display='block';
+}
+
+// ============ AI TUTOR ============
+let chatHistory = [];
+
+function appendMsg(role, html) {
+  const chat = document.getElementById('tutorChat');
+  const isUser = role==='user';
+  const div = document.createElement('div');
+  div.className = 'chat-msg' + (isUser?' user':'');
+  div.innerHTML = `<div class="chat-avatar ${isUser?'user':''}">${isUser?'あ':'先'}</div><div class="chat-bubble ${isUser?'user':''}">${html}</div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('tutorInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  input.value='';
+  document.getElementById('tutorSendBtn').disabled=true;
+
+  appendMsg('user', msg);
+  chatHistory.push({role:'user',content:msg});
+
+  const loadingDiv = appendMsg('ai', '<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:600,
+        system:`You are an expert Japanese language tutor specializing in JLPT N4 preparation. You explain grammar clearly, give example sentences in Japanese with romaji and English translations, and encourage students warmly. Format Japanese text clearly. When showing Japanese, include furigana or romaji where helpful. Keep responses concise and educational. Use the structure: explanation → example sentence(s) → tip or encouragement.`,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.find(c=>c.type==='text')?.text || 'I couldn\'t generate a response. Please try again.';
+    chatHistory.push({role:'assistant',content:reply});
+    loadingDiv.querySelector('.chat-bubble').innerHTML = reply.replace(/\n/g,'<br>');
+  } catch(e) {
+    loadingDiv.querySelector('.chat-bubble').innerHTML = 'Connection error. Please check your internet and try again.';
+  }
+  document.getElementById('tutorSendBtn').disabled=false;
+  document.getElementById('tutorChat').scrollTop = 9999;
+}
+
+function sendQuickPrompt(text) {
+  document.getElementById('tutorInput').value = text;
+  showPage('tutor', document.querySelector('.nav-btn:nth-child(5)'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn')[4].classList.add('active');
+  sendMessage();
+}
+
+// ============ KANA DATA ============
+const hiraganaData = [
+  {k:'あ',r:'a',row:'vowel'},{k:'い',r:'i',row:'vowel'},{k:'う',r:'u',row:'vowel'},{k:'え',r:'e',row:'vowel'},{k:'お',r:'o',row:'vowel'},
+  {k:'か',r:'ka',row:'k'},{k:'き',r:'ki',row:'k'},{k:'く',r:'ku',row:'k'},{k:'け',r:'ke',row:'k'},{k:'こ',r:'ko',row:'k'},
+  {k:'さ',r:'sa',row:'s'},{k:'し',r:'shi',row:'s'},{k:'す',r:'su',row:'s'},{k:'せ',r:'se',row:'s'},{k:'そ',r:'so',row:'s'},
+  {k:'た',r:'ta',row:'t'},{k:'ち',r:'chi',row:'t'},{k:'つ',r:'tsu',row:'t'},{k:'て',r:'te',row:'t'},{k:'と',r:'to',row:'t'},
+  {k:'な',r:'na',row:'n'},{k:'に',r:'ni',row:'n'},{k:'ぬ',r:'nu',row:'n'},{k:'ね',r:'ne',row:'n'},{k:'の',r:'no',row:'n'},
+  {k:'は',r:'ha',row:'h'},{k:'ひ',r:'hi',row:'h'},{k:'ふ',r:'fu',row:'h'},{k:'へ',r:'he',row:'h'},{k:'ほ',r:'ho',row:'h'},
+  {k:'ま',r:'ma',row:'m'},{k:'み',r:'mi',row:'m'},{k:'む',r:'mu',row:'m'},{k:'め',r:'me',row:'m'},{k:'も',r:'mo',row:'m'},
+  {k:'や',r:'ya',row:'y'},{k:'ゆ',r:'yu',row:'y'},{k:'よ',r:'yo',row:'y'},
+  {k:'ら',r:'ra',row:'r'},{k:'り',r:'ri',row:'r'},{k:'る',r:'ru',row:'r'},{k:'れ',r:'re',row:'r'},{k:'ろ',r:'ro',row:'r'},
+  {k:'わ',r:'wa',row:'w'},{k:'を',r:'wo',row:'w'},{k:'ん',r:'n',row:'w'},
+];
+
+const katakanaData = [
+  {k:'ア',r:'a',row:'vowel'},{k:'イ',r:'i',row:'vowel'},{k:'ウ',r:'u',row:'vowel'},{k:'エ',r:'e',row:'vowel'},{k:'オ',r:'o',row:'vowel'},
+  {k:'カ',r:'ka',row:'k'},{k:'キ',r:'ki',row:'k'},{k:'ク',r:'ku',row:'k'},{k:'ケ',r:'ke',row:'k'},{k:'コ',r:'ko',row:'k'},
+  {k:'サ',r:'sa',row:'s'},{k:'シ',r:'shi',row:'s'},{k:'ス',r:'su',row:'s'},{k:'セ',r:'se',row:'s'},{k:'ソ',r:'so',row:'s'},
+  {k:'タ',r:'ta',row:'t'},{k:'チ',r:'chi',row:'t'},{k:'ツ',r:'tsu',row:'t'},{k:'テ',r:'te',row:'t'},{k:'ト',r:'to',row:'t'},
+  {k:'ナ',r:'na',row:'n'},{k:'ニ',r:'ni',row:'n'},{k:'ヌ',r:'nu',row:'n'},{k:'ネ',r:'ne',row:'n'},{k:'ノ',r:'no',row:'n'},
+  {k:'ハ',r:'ha',row:'h'},{k:'ヒ',r:'hi',row:'h'},{k:'フ',r:'fu',row:'h'},{k:'ヘ',r:'he',row:'h'},{k:'ホ',r:'ho',row:'h'},
+  {k:'マ',r:'ma',row:'m'},{k:'ミ',r:'mi',row:'m'},{k:'ム',r:'mu',row:'m'},{k:'メ',r:'me',row:'m'},{k:'モ',r:'mo',row:'m'},
+  {k:'ヤ',r:'ya',row:'y'},{k:'ユ',r:'yu',row:'y'},{k:'ヨ',r:'yo',row:'y'},
+  {k:'ラ',r:'ra',row:'r'},{k:'リ',r:'ri',row:'r'},{k:'ル',r:'ru',row:'r'},{k:'レ',r:'re',row:'r'},{k:'ロ',r:'ro',row:'r'},
+  {k:'ワ',r:'wa',row:'w'},{k:'ヲ',r:'wo',row:'w'},{k:'ン',r:'n',row:'w'},
+];
+
+const hiraganaVocab = [
+  {kanji:'あした',reading:'あした',meaning:'tomorrow',type:'noun'},
+  {kanji:'あさ',reading:'あさ',meaning:'morning',type:'noun'},
+  {kanji:'いつ',reading:'いつ',meaning:'when',type:'adv'},
+  {kanji:'うち',reading:'うち',meaning:'home / house',type:'noun'},
+  {kanji:'おなか',reading:'おなか',meaning:'stomach / belly',type:'noun'},
+  {kanji:'かばん',reading:'かばん',meaning:'bag',type:'noun'},
+  {kanji:'きのう',reading:'きのう',meaning:'yesterday',type:'noun'},
+  {kanji:'くすり',reading:'くすり',meaning:'medicine',type:'noun'},
+  {kanji:'こころ',reading:'こころ',meaning:'heart / mind',type:'noun'},
+  {kanji:'さいふ',reading:'さいふ',meaning:'wallet',type:'noun'},
+  {kanji:'しごと',reading:'しごと',meaning:'work / job',type:'noun'},
+  {kanji:'すき',reading:'すき',meaning:'like / fond of',type:'adj'},
+  {kanji:'そと',reading:'そと',meaning:'outside',type:'noun'},
+  {kanji:'たべもの',reading:'たべもの',meaning:'food',type:'noun'},
+  {kanji:'ちかく',reading:'ちかく',meaning:'nearby',type:'noun'},
+  {kanji:'つぎ',reading:'つぎ',meaning:'next',type:'noun'},
+  {kanji:'てがみ',reading:'てがみ',meaning:'letter (mail)',type:'noun'},
+  {kanji:'ところ',reading:'ところ',meaning:'place',type:'noun'},
+  {kanji:'ともだち',reading:'ともだち',meaning:'friend',type:'noun'},
+  {kanji:'なまえ',reading:'なまえ',meaning:'name',type:'noun'},
+  {kanji:'にもつ',reading:'にもつ',meaning:'luggage',type:'noun'},
+  {kanji:'はなし',reading:'はなし',meaning:'story / talk',type:'noun'},
+  {kanji:'ひとり',reading:'ひとり',meaning:'alone / one person',type:'noun'},
+  {kanji:'ふゆ',reading:'ふゆ',meaning:'winter',type:'noun'},
+  {kanji:'へや',reading:'へや',meaning:'room',type:'noun'},
+  {kanji:'まち',reading:'まち',meaning:'town / city',type:'noun'},
+  {kanji:'みせ',reading:'みせ',meaning:'shop / store',type:'noun'},
+  {kanji:'むり',reading:'むり',meaning:'impossible',type:'adj'},
+  {kanji:'もの',reading:'もの',meaning:'thing / object',type:'noun'},
+  {kanji:'やすみ',reading:'やすみ',meaning:'rest / holiday',type:'noun'},
+  {kanji:'ゆき',reading:'ゆき',meaning:'snow',type:'noun'},
+  {kanji:'よる',reading:'よる',meaning:'night / evening',type:'noun'},
+  {kanji:'りょこう',reading:'りょこう',meaning:'travel / trip',type:'noun'},
+  {kanji:'れんしゅう',reading:'れんしゅう',meaning:'practice',type:'noun'},
+  {kanji:'わたし',reading:'わたし',meaning:'I / me',type:'noun'},
+];
+
+const katakanaVocab = [
+  {kanji:'アイスクリーム',reading:'あいすくりーむ',meaning:'ice cream',type:'noun'},
+  {kanji:'アパート',reading:'あぱーと',meaning:'apartment',type:'noun'},
+  {kanji:'アルバム',reading:'あるばむ',meaning:'album',type:'noun'},
+  {kanji:'インターネット',reading:'いんたーねっと',meaning:'internet',type:'noun'},
+  {kanji:'ウイルス',reading:'ういるす',meaning:'virus',type:'noun'},
+  {kanji:'エアコン',reading:'えあこん',meaning:'air conditioner',type:'noun'},
+  {kanji:'エレベーター',reading:'えれべーたー',meaning:'elevator',type:'noun'},
+  {kanji:'オフィス',reading:'おふぃす',meaning:'office',type:'noun'},
+  {kanji:'カメラ',reading:'かめら',meaning:'camera',type:'noun'},
+  {kanji:'カレー',reading:'かれー',meaning:'curry',type:'noun'},
+  {kanji:'キャンセル',reading:'きゃんせる',meaning:'cancellation',type:'noun'},
+  {kanji:'クラス',reading:'くらす',meaning:'class',type:'noun'},
+  {kanji:'コーヒー',reading:'こーひー',meaning:'coffee',type:'noun'},
+  {kanji:'コンビニ',reading:'こんびに',meaning:'convenience store',type:'noun'},
+  {kanji:'サービス',reading:'さーびす',meaning:'service',type:'noun'},
+  {kanji:'スーパー',reading:'すーぱー',meaning:'supermarket',type:'noun'},
+  {kanji:'スケジュール',reading:'すけじゅーる',meaning:'schedule',type:'noun'},
+  {kanji:'スポーツ',reading:'すぽーつ',meaning:'sports',type:'noun'},
+  {kanji:'セーター',reading:'せーたー',meaning:'sweater',type:'noun'},
+  {kanji:'タクシー',reading:'たくしー',meaning:'taxi',type:'noun'},
+  {kanji:'テスト',reading:'てすと',meaning:'test / exam',type:'noun'},
+  {kanji:'テレビ',reading:'てれび',meaning:'television',type:'noun'},
+  {kanji:'ニュース',reading:'にゅーす',meaning:'news',type:'noun'},
+  {kanji:'ノート',reading:'のーと',meaning:'notebook',type:'noun'},
+  {kanji:'パスポート',reading:'ぱすぽーと',meaning:'passport',type:'noun'},
+  {kanji:'バス',reading:'ばす',meaning:'bus',type:'noun'},
+  {kanji:'パソコン',reading:'ぱそこん',meaning:'personal computer',type:'noun'},
+  {kanji:'ビール',reading:'びーる',meaning:'beer',type:'noun'},
+  {kanji:'ホテル',reading:'ほてる',meaning:'hotel',type:'noun'},
+  {kanji:'マスク',reading:'ますく',meaning:'mask',type:'noun'},
+  {kanji:'メール',reading:'めーる',meaning:'email',type:'noun'},
+  {kanji:'レストラン',reading:'れすとらん',meaning:'restaurant',type:'noun'},
+  {kanji:'レポート',reading:'れぽーと',meaning:'report',type:'noun'},
+  {kanji:'ロビー',reading:'ろびー',meaning:'lobby',type:'noun'},
+  {kanji:'ワイン',reading:'わいん',meaning:'wine',type:'noun'},
+];
+
+let masteredHiragana = new Set(JSON.parse(localStorage.getItem('jlpt_hiragana')||'[]'));
+let masteredKatakana = new Set(JSON.parse(localStorage.getItem('jlpt_katakana')||'[]'));
+let hiraganaFilter = 'all';
+let katakanaFilter = 'all';
+
+function filterKana(type, row) {
+  if(type==='hiragana') { hiraganaFilter=row; renderHiragana(); }
+  else { katakanaFilter=row; renderKatakana(); }
+}
+
+function renderKanaGrid(data, masteredSet, storageKey, gridId, filterVal) {
+  const filtered = filterVal==='all' ? data : data.filter(c=>c.row===filterVal);
+  document.getElementById(gridId).innerHTML = filtered.map((c,i)=>{
+    const id = c.k;
+    const isM = masteredSet.has(id);
+    return `<div class="kana-card ${isM?'mastered':''}" id="kc_${gridId}_${i}" onclick="flipKana(this,'${id}','${c.r}','${storageKey}','${gridId}')">
+      <div class="kc">${c.k}</div>
+      <div class="kr">${c.r}</div>
+      <span class="kana-hidden" style="display:none"></span>
+    </div>`;
+  }).join('');
+}
+
+function flipKana(card, id, romaji, storageKey, gridId) {
+  if(card.classList.contains('flipped')) {
+    card.classList.remove('flipped');
+    card.querySelector('.kc').textContent = id;
+    card.querySelector('.kr').style.display='';
+    card.querySelector('.kana-hidden').style.display='none';
+    // toggle mastered on second click
+    const set = storageKey==='jlpt_hiragana' ? masteredHiragana : masteredKatakana;
+    if(set.has(id)) { set.delete(id); card.classList.remove('mastered'); }
+    else { set.add(id); card.classList.add('mastered'); addXP(3); }
+    localStorage.setItem(storageKey, JSON.stringify([...set]));
+  } else {
+    card.classList.add('flipped');
+    card.querySelector('.kc').textContent = romaji;
+    card.querySelector('.kr').style.display='none';
+  }
+}
+
+function renderVocabGrid(data, gridId) {
+  document.getElementById(gridId).innerHTML = data.map(v=>`
+    <div class="vocab-card ${learned.has(v.kanji)?'learned':''}" onclick="toggleLearned('${v.kanji}',this)">
+      <span class="tag">${v.type}</span>
+      <div class="kanji" style="font-size:22px;padding-top:4px">${v.kanji}</div>
+      <div class="reading">${v.reading}</div>
+      <div class="meaning">${v.meaning}</div>
+    </div>
+  `).join('');
+}
+
+function renderHiragana() {
+  renderKanaGrid(hiraganaData, masteredHiragana, 'jlpt_hiragana', 'hiraganaGrid', hiraganaFilter);
+  renderVocabGrid(hiraganaVocab, 'hiraganaVocabGrid');
+}
+
+function renderKatakana() {
+  renderKanaGrid(katakanaData, masteredKatakana, 'jlpt_katakana', 'katakanaGrid', katakanaFilter);
+  renderVocabGrid(katakanaVocab, 'katakanaVocabGrid');
+}
+
+// ============ INIT ============
+updateXPBar();
+renderVocab();
+renderGrammar();
+renderKanji();
+renderHiragana();
+renderKatakana();
+</script>
+</body>
+</html>
